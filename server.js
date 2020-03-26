@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 app.get("/api/workouts", (req, res) => {
   db.Workout.find({})
     .then(Workout => {
-        console.log(Workout)
+        
       res.json(Workout);
     })
     .catch(err => {
@@ -33,9 +33,9 @@ app.get("/api/workouts", (req, res) => {
 
 
 app.post("/api/workouts", ({ body }, res) => {
-    console.log(body)
+    
   db.Workout.create(body)
-    // .then(({ _id }) => db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true }))
+  
     .then(result => {
       res.json(result);
     })
@@ -45,18 +45,34 @@ app.post("/api/workouts", ({ body }, res) => {
 });
 
 app.put("/api/workouts/:id", function(req, res) {
-db.Workout.findByIdAndUpdate(req.params.id, {$push:{exercises:req.body}})
+let duration = req.body.duration
+
+db.Workout.findByIdAndUpdate(req.params.id, {$push:{exercises:req.body}, $inc:{totalDuration: duration}})
 .then(result => res.json(result))
 .catch(err => {
     res.json(err);
   });
 })
 
+app.get("/api/workouts/range", (req, res) => {
+    db.Workout.find({}).sort({ _id: -1 }).limit(7)
+      .then(Workout => {
+         
+        res.json(Workout);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+
 // html routes
 app.get("/exercise", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/exercise.html"));
   });
 
+  app.get("/stats", function(req, res) {
+    res.sendFile(path.join(__dirname, "./public/stats.html"));
+  });
 
 
 app.listen(PORT, () => {

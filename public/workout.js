@@ -1,6 +1,5 @@
 async function initWorkout() {
   const lastWorkout = await API.getLastWorkout();
-  console.log("Last workout:", lastWorkout);
   if (lastWorkout) {
     document
       .querySelector("a[href='/exercise?']")
@@ -28,6 +27,7 @@ function tallyExercises(exercises) {
     } else if (curr.type === "cardio") {
       acc.totalDistance = (acc.totalDistance || 0) + curr.distance;
     }
+
     return acc;
   }, {});
   return tallied;

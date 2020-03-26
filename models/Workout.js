@@ -5,6 +5,12 @@ const WorkoutSchema = new Schema({
     day: {
         type: Date,
         default: () => new Date()
+        
+    }, 
+
+    totalDuration :{
+      type: Number,
+      default: 0
     },
     exercises:[
       {
@@ -23,7 +29,7 @@ const WorkoutSchema = new Schema({
       weight: {
         type: Number
       },
-      set: {
+      sets: {
         type: Number
       },
       reps: {
